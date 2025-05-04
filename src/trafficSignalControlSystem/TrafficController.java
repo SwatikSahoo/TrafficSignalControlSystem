@@ -2,12 +2,13 @@ package trafficSignalControlSystem;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class TrafficController {
     private static TrafficController instance;
     private final Map<String, Road> roads;
 
-    public TrafficController() {
+    private TrafficController() {
         roads = new ConcurrentHashMap<>();
     }
     public static synchronized TrafficController getInstance(){
@@ -19,15 +20,20 @@ public class TrafficController {
     public void startTrafiicControl(){
         for (Road road:roads.values()){
             TrafficLight light = road.getLight();
+            AtomicInteger k= new AtomicInteger(4);
             new Thread(()->{
-                while(true){
+                while(k.getAndDecrement() >0){
                     try{
+                        System.out.println("RED is ON");
                         Thread.sleep(light.getRedTime());
                         light.changeSignal(Signal.GREEN);
+                        System.out.println("GREEN is ON");
                         Thread.sleep(light.getGreTime());
                         light.changeSignal(Signal.YELLOW);
+                        System.out.println("YELLOW is ON");
                         Thread.sleep(light.getYelTime());
                         light.changeSignal(Signal.RED);
+                        System.out.println("RED is ON");
                     } catch (InterruptedException e) {
                         throw new RuntimeException(e);
                     }
