@@ -18,6 +18,15 @@ public class Main {
         rd3.setTrafficLight(tl3);
         rd4.setTrafficLight(tl4);
 
+        TrafficController sys= TrafficController.getInstance();
+
+        sys.addRoad(rd1);
+        sys.addRoad(rd2);
+        sys.addRoad(rd3);
+        sys.addRoad(rd4);
+
+        sys.startTrafiicControl();
+        sys.handleEmergency("R2");
 
 
     }
